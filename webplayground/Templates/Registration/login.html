@@ -1,0 +1,46 @@
+{% extends 'template.html' %}
+{% load static %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block content %}
+
+{% if messages %}
+  {% for sms in messages  %}
+    <div id="txt" data-sms="{{ sms }}"></div>
+  {% endfor %}
+{% endif %}
+
+<style>.errorlist{color:red;}</style>
+<main role="main">
+  <div class="container">
+    <div class="row mt-5 pt-5">
+      <div class="col-md-5 mx-auto mb-5">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <h2 class="mb-4 text-center text-info">Iniciar sesión</h2>
+          {% if form.non_field_errors %}
+            <p style="color:red">Usuario o contraseña incorrectos, prueba de nuevo.</p>
+          {% endif %}
+          <div class="mb-3 form-group">
+            <input type="text" name="username" autofocus maxlength="254" required
+              id="id_username" class="form-control" placeholder="Nombre de usuario"/>
+          </div>
+          <div class="mb-3 form-group">
+            <input type="password" name="password" required
+              id="id_password" class="form-control" placeholder="Contraseña"/>
+          </div>
+          <br/>
+          <p><input type="submit" class="btn btn-primary btn-block" value="Acceder"></p>
+        </form>
+        <div class="text-center mt-5">
+          <a class="text-info" href="{% url 'password_reset' %}">¿Ha olvidado la contraseña?</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'Page/sweetalert2/js/sweetalert2.all.min.js' %}"></script>
+  <script src="{% static 'Page/js/index.js' %}"></script>
+{% endblock scripts %}

@@ -1,0 +1,77 @@
+{% extends 'template.html' %}
+{% load static %}
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+
+    {% if messages %}        
+        {% for sms in messages  %}
+            <div id="txt" data-sms="{{ sms }}"></div>
+        {% endfor %}
+    {% endif %}
+
+    <style>.errorlist{color:red;} label{display:none}</style>
+    <main role="main">
+        <div class="container">
+            <div class="row mt-5">
+            <div class="col-md-9 mx-auto mb-5">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <!-- Previa del avatar -->
+                        <div class="col-md-4">
+                            {% if request.user.profile.avatar %}
+                                <img src="{{ request.user.profile.avatar.url }}" class="img-fluid rounded-circle">
+                                <p class="text-center text-danger mt-2">
+                                    <b>¿Borrar?</b> <input type="checkbox" id="avatar-clear" 
+                                    name="avatar-clear" />
+                                </p>
+                            {% else %}
+                                <div class="mb-3">
+                                    <img src="{% static 'Img/avatar.png' %}" alt="my-photo" class="img-fluid rounded-circle">
+                                </div>
+                            {% endif %}
+                            <h5 class="text-info text-center"> {{ user.get_full_name }} </h5>
+                            <div class="text-center">
+                                <small style="cursor: pointer;" title="Clic para editar email" data-toggle="tooltip" data-placement="bottom">
+                                    <a href="{% url 'urlRegistration:profile_email' %}" class="text-muted">{{ request.user.email }}</a>
+                                </small>
+                            </div>
+                            <input type="submit" class="btn btn-primary btn-block mt-3 d-none d-md-block" value="Actualizar">
+                        </div>
+                        <!-- Formulario -->
+                        <div class="col-md-8">
+                            <small class="float-right d-none d-md-block">
+                                <a class="text-muted" href="{% url 'password_change' %}">Cambiar contraseña</a>
+                            </small>
+                            <h3 class="text-primary d-none d-md-block">Perfil</h3>
+
+                            <div class="input-group mt-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="upload">Subir Imágen</span>
+                                </div>
+                                <div class="custom-file border rounded-pill">
+                                    <input type="file" name="avatar" class="custom-file-input" id="id_avatar">
+                                </div>
+                            </div>
+                            <small class="text-muted">Tamaño recomendado 930x850</small>
+
+                            {{ form.bio }}
+                            {{ form.link }}
+                            <div class="text-center my-3 d-sm-block d-md-none">
+                                <small><a class="text-muted" href="{% url 'password_change' %}">Cambiar contraseña</a></small>
+                            </div>
+                            <input type="submit" class="btn btn-primary btn-block mt-3 d-sm-block d-md-none" value="Actualizar">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'Page/sweetalert2/js/sweetalert2.all.min.js' %}"></script>
+  <script src="{% static 'Page/js/index.js' %}"></script>
+{% endblock scripts %}

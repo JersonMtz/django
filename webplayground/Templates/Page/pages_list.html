@@ -1,0 +1,56 @@
+
+{% extends 'template.html' %}
+{% load static %}
+{% block title %}Páginas{% endblock %}
+
+{% block styles %}<link href="{% static 'Page/sweetalert2/css/sweetalert2.min.css' %}" rel="stylesheet">{% endblock %}
+
+{% block content %}
+{% include 'Page/includes/pages_menu.html' %}
+
+{% if messages %}
+  {% for sms in messages  %}
+    <div id="txt" data-sms="{{ sms }}"></div>
+  {% endfor %}
+{% endif %}
+
+<main role="main">
+  <div class="container mb-4">
+    {% if not object_list %}
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4 text-info">Agrega más contenido</h1>
+          <p class="lead text-info">No hay elementos por mostrar</p>
+        </div>
+      </div>
+    {% else %}
+      <form action="#" method="POST" id="form-delete">{% csrf_token %}</form>
+      {% for page_item in object_list|dictsort:'order' reversed %}
+        <div class="row mt-3">
+          <div class="col-md-9 mx-auto">
+            <h2 class="mb-4">{{ page_item.title }}</h2>
+            <div>
+              <p>{{page_item.content|striptags|safe|truncatechars:"200"}}</p>               
+
+              <a data-toggle="tooltip" data-placement="top" title="Lea todo el contenido, haz clic acá" href="{% url 'urlPage:detail' page_item.id page_item.title|slugify %}">Leer más</a>
+
+              {% if request.user.is_staff %}
+                | <a data-toggle="tooltip" data-placement="top" title="Actualice el registro accediendo a este link" type="button" href="{% url 'urlPage:edit' page_item.id %}">Editar</a>
+                
+                | <a data-toggle="tooltip" data-placement="top" title="Elimine el registro permatentemente" href="{% url 'urlPage:delete' page_item.id %}" class="delete" data-title="{{ page_item.title }}">Borrar</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'Page/sweetalert2/js/sweetalert2.all.min.js' %}"></script>
+  <script src="{% static 'Page/js/index.js' %}"></script>
+{% endblock scripts %}
+
